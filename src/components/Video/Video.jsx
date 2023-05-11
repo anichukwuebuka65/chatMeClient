@@ -8,7 +8,7 @@ export default function Video({ stream }) {
   });
   return (
     <div>
-      <video className="bg-black" ref={videoRef} controls autoPlay></video>
+      <video className="bg-black" ref={videoRef} playsInline autoPlay></video>
     </div>
   );
 }
