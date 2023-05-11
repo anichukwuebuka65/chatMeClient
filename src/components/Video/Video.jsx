@@ -7,8 +7,14 @@ export default function Video({ stream }) {
     videoRef.current.srcObject = stream;
   });
   return (
-    <div>
-      <video className="bg-black" ref={videoRef} playsInline autoPlay></video>
-    </div>
+    <>
+      <video
+        className=" bg-slate-500"
+        ref={videoRef}
+        playsInline
+        controls
+        autoPlay
+      ></video>
+    </>
   );
 }
