@@ -4,7 +4,7 @@ import { localStream, remoteStream } from "./RTCPeerConn";
 
 export default function VideoContainer() {
   return (
-    <div className="flex items-center justify-center md:min-h-screen bg-[#111010]">
+    <div className="flex flex-col justify-center min-h-screen bg-[#111010]">
       <div className="relative  md:max-h-screen rounded-sm overflow-hidden">
         <Video stream={localStream} />
         <div className="border border-white absolute w-1/4 md:top-8 top-4 lg:left-16 left-4 rounded-lg overflow-hidden">
