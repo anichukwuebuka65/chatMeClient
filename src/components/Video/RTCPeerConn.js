@@ -1,4 +1,5 @@
 const url = "ws://localhost:3000";
+
 const iceServers = [
   {
     urls: "stun:stun.12connect.com:3478",
@@ -10,8 +11,8 @@ const iceServers = [
 const constraints = {
   audio: false,
   video: {
-    height: { ideal: 1920 },
-    width: { ideal: 1080 },
+    width: { ideal: 1920 },
+    height: { ideal: 1080 },
   },
 };
 
@@ -47,6 +48,10 @@ rtc.ontrack = ({ track }) => {
 
 rtc.onnegotiationneeded = () => {
   createOffer();
+};
+
+conn.onopen = () => {
+  conn.send(JSON.stringify({ type: "id", id: "123" }));
 };
 
 conn.onmessage = handleMessage;

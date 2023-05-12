@@ -9,10 +9,9 @@ export default function Video({ stream }) {
   return (
     <>
       <video
-        className=" bg-slate-500"
+        className=" bg-slate-500 h-full object-cover"
         ref={videoRef}
         playsInline
-        controls
         autoPlay
       ></video>
     </>

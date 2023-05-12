@@ -1,12 +1,10 @@
 import VideoContainer from "./components/Video/VideoContainer";
+import icon from "./assets/logo.png";
 
 function App() {
   return (
-    <main>
-      <h1>LIVE CHAT</h1>
-      <div>
-        <VideoContainer />
-      </div>
+    <main className=" bg-[#fff]">
+      <VideoContainer />
     </main>
   );
 }
