@@ -12,8 +12,7 @@ export default function Video({ stream }) {
         className=" bg-[#000] h-full md:object-contain"
         ref={videoRef}
         playsInline
-        controls
-        autoplay
+        autoplay=true
       ></video>
     </>
   );
