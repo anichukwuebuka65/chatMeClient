@@ -9,7 +9,7 @@ export default function Video({ stream }) {
   return (
     <>
       <video
-        className=" bg-[#000] h-full md:object-contain"
+        className=" bg-[#6e6666] h-full w-full object-cover"
         ref={videoRef}
         playsInline
         autoPlay
