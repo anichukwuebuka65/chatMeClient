@@ -1,4 +1,4 @@
-const url = "ws://localhost:3000";
+const url = "wss://chatmebackend.onrender.com";
 const iceServers = [
   {
     urls: "stun:stun1.l.google.com",
