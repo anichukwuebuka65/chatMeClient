@@ -17,7 +17,7 @@ function Login({ roomNotFound }) {
       {roomNotFound && <p>Room not found, pls create a new room</p>}
       <form>
         <label htmlFor="roomId"></label>
-        <input id="roomId" ref={roomIdRef} type="text" />
+        <input className="border-1 border-slate-600" id="roomId" ref={roomIdRef} type="text" />
         <button type="button" onClick={joinRoom}>
           Join Room
         </button>
