@@ -19,7 +19,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div className="bg-[#080808] h-screen flex items-center justify-center">
       {page === "login" && <Login roomNotFound={roomNotFound} />}
       {page === "home" && <Home roomId={roomId} />}
     </div>

@@ -1,4 +1,4 @@
-const url = "wss://chatmebackend.onrender.com";
+const url = "ws://localhost:3000";
 const iceServers = [
   {
     urls: "stun:stun1.l.google.com",
@@ -16,12 +16,12 @@ conn.onmessage = handleMessage;
 
 let rtc;
 
-export function Init() {
+export function Init(selectedDevices) {
   rtc = new RTCPeerConnection({
     iceServers,
   });
 
-  addTrackToLocalStream();
+  addTrackToLocalStream(selectedDevices);
   rtc.onnegotiationneeded = createOffer;
   rtc.onicecandidate = sendIceCandidate;
   rtc.onconnectionstatechange = closeSocketConnection;
@@ -30,7 +30,7 @@ export function Init() {
 }
 
 const constraints = {
-  audio: false,
+  audio: true,
   video: {
     width: { ideal: 1920 },
     height: { ideal: 1080 },
@@ -44,14 +44,26 @@ export const funcObject = {
   candidate: handleIceCandidate,
 };
 
-async function getMedia() {
+async function getMedia({ videoinput, audioinput }) {
+  const constraints = {
+    video: {
+      deviceId: videoinput,
+    },
+    audio: {
+      deviceId: audioinput,
+    },
+    echoCancellation: true,
+  };
   const stream = await navigator.mediaDevices.getUserMedia(constraints);
   return stream;
 }
 
-function addTrackToLocalStream() {
-  getMedia().then((stream) => {
-    stream.getTracks().forEach((track) => localStream.addTrack(track));
+function addTrackToLocalStream(selectedDevices) {
+  getMedia(selectedDevices).then((stream) => {
+    stream.getTracks().forEach((track) => {
+      if (track.kind === "audio") return;
+      localStream.addTrack(track);
+    });
   });
 }
 
