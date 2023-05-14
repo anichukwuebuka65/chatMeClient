@@ -17,7 +17,7 @@ function Login({ roomNotFound }) {
   return (
     <div
       style={{ width: "min(100%, 28rem)" }}
-      className=" rounded-md mx-4 p-2 md:p-4 bg-[#111010] text-center text-[#c0b0b0]"
+      className=" rounded-md mx-4 p-2 md:p-4 bg-[#1f1c1c] text-center text-[#c0b0b0]"
     >
       <h1 className="text-4xl tracking-wider font-[600] mb-2">LitChat</h1>
       <p className="text-[#ffffff] italic text-sm">
@@ -39,7 +39,7 @@ function Login({ roomNotFound }) {
         </div>
 
         <button
-          className="bg-[#201733] rounded-md py-2"
+          className="bg-[#331c66] rounded-md py-2"
           type="button"
           onClick={joinRoom}
         >
