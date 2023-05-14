@@ -1,11 +1,12 @@
 const url = "wss://chatmebackend.onrender.com";
 const iceServers = [
   {
-    urls: "stun:stun.12connect.com:3478",
+    urls: "stun:stun1.l.google.com",
   },
   {
-    urls: "stun:stun.2talk.co.nz:3478",
+    urls: "stun:stun2.l.google.com",
   },
+  { urls: "stun:stun3.l.google.com" },
 ];
 
 export const localStream = new MediaStream();
