@@ -3,8 +3,10 @@ import { send } from "../components/Video/RTCPeerConn";
 
 function Login({ roomNotFound }) {
   const roomIdRef = useRef();
+  const [err, setError] = useState("");
 
   function joinRoom() {
+    if (!roomIdRef.current.value) return setError("Pls enter the room id ");
     send({ type: "joinRoom", roomId: roomIdRef.current.value });
   }
 
@@ -13,18 +15,26 @@ function Login({ roomNotFound }) {
   }
 
   return (
-    <div className=" rounded-md min-w-[25rem] p-2 md:p-4 bg-[#111010] text-[#c0b0b0]">
-      <h1 className="text-2xl">LitChat</h1>
-      <p>chat with your buddies</p>
+    <div className=" rounded-md min-w-[28rem] p-2 md:p-4 bg-[#111010] text-center text-[#c0b0b0]">
+      <h1 className="text-4xl tracking-wider font-[600] mb-2">LitChat</h1>
+      <p className="text-[#ffffff] italic text-sm">
+        chat with your buddies and family
+      </p>
       {roomNotFound && <p>Room not found, pls create a new room</p>}
       <form className="grid gap-4">
         <label htmlFor="roomId"></label>
-        <input
-          className="border-2 border-blue-600 rounded-md p-2"
-          id="roomId"
-          ref={roomIdRef}
-          type="text"
-        />
+        <div className="grid w-full">
+          <input
+            className={` ${
+              err ? "border-2 border-red-900" : ""
+            }  rounded-md p-2`}
+            id="roomId"
+            ref={roomIdRef}
+            type="text"
+          />
+          {err && <p className="text-sm text-red-500">{err}</p>}
+        </div>
+
         <button
           className="bg-[#201733] rounded-md py-2"
           type="button"
