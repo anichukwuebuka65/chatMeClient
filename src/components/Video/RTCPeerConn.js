@@ -3,10 +3,6 @@ const iceServers = [
   {
     urls: "stun:stun1.l.google.com",
   },
-  {
-    urls: "stun:stun2.l.google.com",
-  },
-  { urls: "stun:stun3.l.google.com" },
 ];
 
 export const localStream = new MediaStream();
