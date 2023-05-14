@@ -14,6 +14,8 @@ function Login({ roomNotFound }) {
 
   return (
     <div>
+    <h1 className="text-2xl">LitChat</h1>
+   <p>chat with your buddies</p>
       {roomNotFound && <p>Room not found, pls create a new room</p>}
       <form>
         <label htmlFor="roomId"></label>
