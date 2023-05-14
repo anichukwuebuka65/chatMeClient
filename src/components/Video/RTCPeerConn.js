@@ -1,5 +1,4 @@
-const url = "ws://localhost:3000";
-
+const url = "wss://chatmebackend.onrender.com";
 const iceServers = [
   {
     urls: "stun:stun.12connect.com:3478",
@@ -8,6 +7,28 @@ const iceServers = [
     urls: "stun:stun.2talk.co.nz:3478",
   },
 ];
+
+export const localStream = new MediaStream();
+export const remoteStream = new MediaStream();
+const conn = new WebSocket(url);
+
+conn.onmessage = handleMessage;
+
+let rtc;
+
+export function Init() {
+  rtc = new RTCPeerConnection({
+    iceServers,
+  });
+
+  addTrackToLocalStream();
+  rtc.onnegotiationneeded = createOffer;
+  rtc.onicecandidate = sendIceCandidate;
+  rtc.onconnectionstatechange = closeSocketConnection;
+  rtc.ontrack = addTrackToRemoteStream;
+  return rtc;
+}
+
 const constraints = {
   audio: false,
   video: {
@@ -16,49 +37,40 @@ const constraints = {
   },
 };
 
-export const localStream = new MediaStream();
-export const remoteStream = new MediaStream();
-const conn = new WebSocket(url);
-const rtc = new RTCPeerConnection({
-  iceServers,
-});
-
-getMedia().then((tracks) => {
-  tracks.forEach((track) => localStream.addTrack(track));
-});
-
-const funcObject = {
-  "user joined": (res) => addTrackToPeerConn(),
+export const funcObject = {
+  userJoined: () => addTrackToPeerConn(),
   offer: handleOffer,
   answer: setRemoteDesc,
   candidate: handleIceCandidate,
 };
 
-rtc.onicecandidate = (event) => {
+async function getMedia() {
+  const stream = await navigator.mediaDevices.getUserMedia(constraints);
+  return stream;
+}
+
+function addTrackToLocalStream() {
+  getMedia().then((stream) => {
+    stream.getTracks().forEach((track) => localStream.addTrack(track));
+  });
+}
+
+function addTrackToRemoteStream(track) {
+  remoteStream.addTrack(track);
+}
+
+function sendIceCandidate(event) {
   if (event.candidate) {
     conn.send(
       JSON.stringify({ type: "candidate", candidate: event.candidate })
     );
   }
-};
+}
 
-rtc.ontrack = ({ track }) => {
-  remoteStream.addTrack(track);
-};
-
-rtc.onnegotiationneeded = () => {
-  createOffer();
-};
-
-conn.onopen = () => {
-  conn.send(JSON.stringify({ type: "id", id: "123" }));
-};
-
-conn.onmessage = handleMessage;
-
-async function getMedia() {
-  const stream = await navigator.mediaDevices.getUserMedia(constraints);
-  return stream.getTracks();
+function closeSocketConnection() {
+  if (rtc.connectionState === "connected") {
+    conn.close();
+  }
 }
 
 function handleMessage(event) {
@@ -85,9 +97,9 @@ function handleOffer(res) {
 }
 
 function addTrackToPeerConn(callback) {
-  getMedia().then((tracks) => {
-    tracks.forEach((track) => {
-      rtc.addTrack(track);
+  getMedia().then((stream) => {
+    stream.getTracks().forEach((track) => {
+      rtc.addTrack(track, stream);
     });
     if (callback) {
       callback();
@@ -116,4 +128,8 @@ function createOffer() {
 function handlelocalDesc(description) {
   rtc.setLocalDescription(description);
   conn.send(JSON.stringify(description));
+}
+
+export function send(data) {
+  conn.send(JSON.stringify(data));
 }

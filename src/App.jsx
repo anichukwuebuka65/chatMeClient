@@ -1,11 +1,28 @@
-import VideoContainer from "./components/Video/VideoContainer";
-import icon from "./assets/logo.png";
+import { useEffect, useState } from "react";
+import Home from "./Pages/Home";
+import Login from "./Pages/Login";
+import { funcObject } from "./components/Video/RTCPeerConn";
 
 function App() {
+  const [page, setPage] = useState("login");
+  const [roomId, setRoomId] = useState();
+  const [roomNotFound, setRoomNotFound] = useState(false);
+
+  useEffect(() => {
+    funcObject["roomJoined"] = (res) => {
+      if (!res.roomId) {
+        return setRoomNotFound(true);
+      }
+      setPage("home");
+      setRoomId(res.roomId);
+    };
+  }, []);
+
   return (
-    <main className=" bg-[#fff]">
-      <VideoContainer />
-    </main>
+    <div>
+      {page === "login" && <Login roomNotFound={roomNotFound} />}
+      {page === "home" && <Home roomId={roomId} />}
+    </div>
   );
 }
 
