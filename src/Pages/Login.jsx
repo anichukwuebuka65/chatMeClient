@@ -24,7 +24,7 @@ function Login({ roomNotFound }) {
         chat with your buddies and family
       </p>
       {roomNotFound && <p>Room not found, pls create a new room</p>}
-      <form className="grid gap-4">
+      <form className="grid gap-6">
         <label htmlFor="roomId"></label>
         <div className="grid w-full">
           <input
@@ -39,14 +39,14 @@ function Login({ roomNotFound }) {
         </div>
 
         <button
-          className="bg-[#331c66] rounded-md py-2"
+          className="bg-[#331c66] text-lg rounded-md py-2"
           type="button"
           onClick={joinRoom}
         >
           Join Room
         </button>
         <button
-          className="rounded py-2 bg-[#28742e]"
+          className="rounded py-2 bg-[#28742e] text-lg"
           type="button"
           onClick={createRoom}
         >
