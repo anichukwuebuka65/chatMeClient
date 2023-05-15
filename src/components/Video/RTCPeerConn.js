@@ -29,14 +29,6 @@ export function Init(selectedDevices) {
   return rtc;
 }
 
-const constraints = {
-  audio: true,
-  video: {
-    width: { ideal: 1920 },
-    height: { ideal: 1080 },
-  },
-};
-
 export const funcObject = {
   userJoined: () => addTrackToPeerConn(),
   offer: handleOffer,
@@ -68,6 +60,7 @@ function addTrackToLocalStream(selectedDevices) {
 }
 
 function addTrackToRemoteStream(track) {
+  if (track.kind === "audioinput") return;
   remoteStream.addTrack(track);
 }
 
@@ -97,6 +90,7 @@ function handleIceCandidate(res) {
   if (rtc.signalingState !== "stable") {
     return;
   }
+  console.log(res.candidate);
   rtc.addIceCandidate(res.candidate);
 }
 
@@ -104,6 +98,7 @@ function handleOffer(res) {
   if (rtc.signalingState !== "stable") {
     return;
   }
+  console.log(res);
   setRemoteDesc(res);
   addTrackToPeerConn(createAnswer);
 }
