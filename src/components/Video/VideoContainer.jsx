@@ -1,23 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Video from "./Video";
-import { Init, localStream } from "./RTCPeerConn";
-import useRegisterStreamEvent from "../../hooks/useRegisterStreamEvent";
+import { localStream, remoteStream } from "./RTCPeerConn";
 
-export default function VideoContainer({ remoteStream }) {
-  const [isStream, setIsStream] = useState(true);
-
-  function showSmallWindow() {
-    console.log("hit");
-    setIsStream(true);
-  }
-
-  function hideSmallWindow() {
-    setIsStream(false);
-  }
-
-  useRegisterStreamEvent("addtrack", showSmallWindow);
-  useRegisterStreamEvent("removetrack", hideSmallWindow);
-
+export default function VideoContainer({ isStream }) {
   return (
     <div className="relative flex flex-col items-center justify-center h-screen bg-[#837272]">
       <Video stream={localStream} />

@@ -1,4 +1,5 @@
 const url = "wss://chatmebackend.onrender.com";
+const url2 = "ws://localhost:3000";
 
 export const localStream = new MediaStream();
 export const remoteStream = new MediaStream();
@@ -6,18 +7,17 @@ const conn = new WebSocket(url);
 
 conn.onmessage = handleMessage;
 
-let rtc;
+export let rtc;
 
-export function Init(selectedDevices, turnServers) {
+export function Init(turnServers) {
   rtc = new RTCPeerConnection({
     iceServers: turnServers,
   });
 
-  addTrackToLocalStream(selectedDevices);
+  addTrackToLocalStream();
   rtc.onnegotiationneeded = createOffer;
   rtc.onicecandidate = sendIceCandidate;
   rtc.onconnectionstatechange = closeSocketConnection;
-  rtc.ontrack = addTrackToRemoteStream;
   return rtc;
 }
 
@@ -35,25 +35,20 @@ export async function getTurnServers() {
     "https://chatme.metered.live/api/v1/turn/credentials?apiKey=" + apiKey
   );
   const data = await res.json();
-  return data;
+  return data.slice(0, 2);
 }
 
-async function getMedia(selected) {
+async function getMedia() {
   const constraints = {
-    video: {
-      deviceId: selected?.videoinput,
-    },
-    audio: {
-      deviceId: selected?.audioinput,
-    },
-    echoCancellation: true,
+    video: true,
+    audio: true,
   };
   const stream = await navigator.mediaDevices.getUserMedia(constraints);
   return stream;
 }
 
-function addTrackToLocalStream(selectedDevices) {
-  getMedia(selectedDevices).then((stream) => {
+function addTrackToLocalStream() {
+  getMedia().then((stream) => {
     stream.getTracks().forEach((track) => {
       if (track.kind === "audio") return;
       localStream.addTrack(track);
@@ -61,7 +56,7 @@ function addTrackToLocalStream(selectedDevices) {
   });
 }
 
-function addTrackToRemoteStream(track) {
+export function addTrackToRemoteStream(track) {
   if (track.kind === "audioinput") return;
   remoteStream.addTrack(track);
 }
@@ -75,7 +70,6 @@ function sendIceCandidate(event) {
 }
 
 function closeSocketConnection() {
-  console.log(rtc?.connectionState);
   if (rtc.connectionState === "connected") {
     conn.close();
   }
