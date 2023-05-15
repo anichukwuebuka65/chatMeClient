@@ -73,6 +73,7 @@ function sendIceCandidate(event) {
 }
 
 function closeSocketConnection() {
+  console.log(rtc.connectionState);
   if (rtc.connectionState === "connected") {
     conn.close();
   }
@@ -115,6 +116,7 @@ function addTrackToPeerConn(callback) {
 }
 
 function setRemoteDesc(res) {
+  console.log(res);
   if (!rtc.remoteDescription) {
     rtc.setRemoteDescription(res);
   }
