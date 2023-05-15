@@ -75,7 +75,7 @@ function sendIceCandidate(event) {
 }
 
 function closeSocketConnection() {
-  console.log(rtc.connectionState);
+  console.log(rtc?.connectionState);
   if (rtc.connectionState === "connected") {
     conn.close();
   }
@@ -90,14 +90,14 @@ function handleMessage(event) {
 }
 
 function handleIceCandidate(res) {
-  if (rtc.signalingState !== "stable") {
+  if (rtc?.signalingState !== "stable") {
     return;
   }
   rtc.addIceCandidate(res.candidate);
 }
 
 function handleOffer(res) {
-  if (rtc.signalingState !== "stable") {
+  if (rtc?.signalingState !== "stable") {
     return;
   }
   setRemoteDesc(res);
