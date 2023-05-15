@@ -44,13 +44,13 @@ export const funcObject = {
   candidate: handleIceCandidate,
 };
 
-async function getMedia({ videoinput, audioinput }) {
+async function getMedia(selected) {
   const constraints = {
     video: {
-      deviceId: videoinput,
+      deviceId: selected?.videoinput,
     },
     audio: {
-      deviceId: audioinput,
+      deviceId: selected?.audioinput,
     },
     echoCancellation: true,
   };

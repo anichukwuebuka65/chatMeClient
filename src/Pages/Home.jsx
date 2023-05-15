@@ -4,7 +4,7 @@ import { Init } from "../components/Video/RTCPeerConn";
 
 export default function Home({ roomId }) {
   const [remoteStream, setRemoteStream] = useState();
-  const [devices, setDevices] = useState([]);
+  const [devices, setDevices] = useState(new Set());
   const [selectedDevices, setSelectedDevices] = useState({});
 
   function handleSelect(devices) {
@@ -14,15 +14,24 @@ export default function Home({ roomId }) {
     }));
   }
 
+  function filterDuplicates(items) {
+    const tempArr = [];
+    return items.filter((item) => {
+      const isDuplicate = tempArr.includes(item.deviceId);
+      tempArr.push(item.deviceId);
+      return !isDuplicate;
+    });
+  }
+
   useEffect(() => {
     const rtc = Init(selectedDevices);
     rtc.ontrack = ({ streams }) => {
       setRemoteStream(streams[0]);
     };
-    navigator.mediaDevices
-      .enumerateDevices()
-      .then((devices) => setDevices(devices));
-  }, [selectedDevices]);
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      setDevices(filterDuplicates(devices));
+    });
+  }, []);
 
   return (
     <div className="relative text-[#211e31] bg-[#fff]">
