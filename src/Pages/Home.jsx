@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import VideoContainer from "../components/Video/VideoContainer";
-import { Init } from "../components/Video/RTCPeerConn";
+import { Init, getTurnServers } from "../components/Video/RTCPeerConn";
 
 export default function Home({ roomId }) {
   const [remoteStream, setRemoteStream] = useState();
@@ -23,13 +23,19 @@ export default function Home({ roomId }) {
     });
   }
 
-  useEffect(() => {
-    const rtc = Init(selectedDevices);
+  function getRemoteStream(rtc) {
     rtc.ontrack = ({ streams }) => {
       setRemoteStream(streams[0]);
     };
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       setDevices(filterDuplicates(devices));
+    });
+  }
+
+  useEffect(() => {
+    getTurnServers().then((servers) => {
+      const rtc = Init(selectedDevices, servers);
+      getRemoteStream(rtc);
     });
   }, []);
 

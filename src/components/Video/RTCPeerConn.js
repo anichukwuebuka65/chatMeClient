@@ -1,12 +1,4 @@
 const url = "wss://chatmebackend.onrender.com";
-const iceServers = [
-  {
-    urls: "stun:stun1.l.google.com",
-  },
-  {
-    urls: "stun:stun2.l.google.com",
-  },
-];
 
 export const localStream = new MediaStream();
 export const remoteStream = new MediaStream();
@@ -16,9 +8,9 @@ conn.onmessage = handleMessage;
 
 let rtc;
 
-export function Init(selectedDevices) {
+export function Init(selectedDevices, turnServers) {
   rtc = new RTCPeerConnection({
-    iceServers,
+    iceServers: turnServers,
   });
 
   addTrackToLocalStream(selectedDevices);
@@ -35,6 +27,16 @@ export const funcObject = {
   answer: setRemoteDesc,
   candidate: handleIceCandidate,
 };
+
+export async function getTurnServers() {
+  const apiKey = "2948b8a31f90c2bf0162c1f9c4dc3845bdb1";
+
+  const res = await fetch(
+    "https://chatme.metered.live/api/v1/turn/credentials?apiKey=" + apiKey
+  );
+  const data = await res.json();
+  return data;
+}
 
 async function getMedia(selected) {
   const constraints = {
@@ -91,7 +93,6 @@ function handleIceCandidate(res) {
   if (rtc.signalingState !== "stable") {
     return;
   }
-  console.log(res.candidate);
   rtc.addIceCandidate(res.candidate);
 }
 
@@ -99,7 +100,6 @@ function handleOffer(res) {
   if (rtc.signalingState !== "stable") {
     return;
   }
-  console.log(res);
   setRemoteDesc(res);
   addTrackToPeerConn(createAnswer);
 }
@@ -116,7 +116,6 @@ function addTrackToPeerConn(callback) {
 }
 
 function setRemoteDesc(res) {
-  console.log(res);
   if (!rtc.remoteDescription) {
     rtc.setRemoteDescription(res);
   }
