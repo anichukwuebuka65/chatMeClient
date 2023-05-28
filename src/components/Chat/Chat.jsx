@@ -25,21 +25,21 @@ export default function Chat({
   }
 
   return (
-    <div className="relative md:basis-[16rem] grow-[1]  bg-white h-full p-4">
+    <div className="relative sm:basis-[16rem] grow-[1]  bg-white h-full">
       {/* {showMessages ? (
         <div className="border border-[#a97cce] sm:hidden shadow-md absolute w-24 aspect-square sm:aspect-video lg:w-1/4 md:top-8 top-4 lg:left-8 left-4 rounded-lg overflow-hidden z-50">
           <Video stream={stream} />
         </div>
       ) : null} */}
 
-      <div className="flex justify-end">
+      <div className="flex justify-end p-2">
         <button onClick={closeMessage}>
-          <img className="w-8" src="./assets/close.png" alt="close button" />
+          <img className="w-8 " src="./assets/close.png" alt="close button" />
         </button>
       </div>
       <div
-        style={{ height: "calc(100vh - 9rem)" }}
-        className="overflow-y-auto rounded bg-[#fdf7f7] shadow-sm p-2"
+        style={{ height: "calc(100vh - 7rem)" }}
+        className="overflow-y-auto rounded shadow-sm p-2"
       >
         {messages.map((message, index) => {
           return (
@@ -61,17 +61,17 @@ export default function Chat({
         })}
       </div>
 
-      <div className="absolute left-3 right-3 flex gap-4 h-16 p-2 bottom-4 bg-[#e7dddd] shadow-sm">
+      <div className="absolute flex gap-4 sm:gap-2 left-0 right-0  p-2 bottom-0 bg-[#e7dddd] shadow-sm">
         <input
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="grow rounded-full px-4 outline-0"
+          className="block shrink rounded-full w-full h-10 px-4 outline-0"
           type="text"
           placeholder="Message..."
         />
         <button
           onClick={addMessage}
-          className="rounded-md px-4 text-white bg-[#8173c2]"
+          className=" rounded-md px-4 text-white bg-[#8173c2]"
           type="button"
         >
           {" "}

@@ -27,7 +27,7 @@ export default function Home({ wsConn, iceServers, subscribe, roomId }) {
       <div
         className={` ${
           showMessages ? "hidden" : ""
-        } sm:block md:basis-[24rem] grow-[3] h-full relative text-[#211e31] bg-[#fff]`}
+        } sm:block sm:basis-[24rem] grow-[3] h-full relative text-[#211e31] bg-[#fff]`}
       >
         <div className=" absolute left-2 top-0 z-50 bg-white my-2 p-1 rounded-sm">
           <p>Room id: {roomId}</p>
