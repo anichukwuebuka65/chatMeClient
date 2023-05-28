@@ -8,7 +8,7 @@ const prodUrl = "https://chatmebackend.onrender.com";
 
 function App() {
   const [page, setPage] = useState("login");
-  const { wsConn, subscribe, subscribers } = useWebSocket(localUrl);
+  const { wsConn, subscribe, subscribers } = useWebSocket(prodUrl);
   const [roomId, setRoomId] = useState(1);
   const [iceServers, setIceServers] = useState([]);
 
