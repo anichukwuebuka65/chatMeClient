@@ -1,16 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import Controls from "../Controls";
 import Video from "./Video";
-import { localStream, remoteStream } from "./RTCPeerConn";
 
-export default function VideoContainer({ isStream }) {
+function VideoContainer({
+  localStream,
+  remoteStream,
+  isStream,
+  setIsStream,
+  conn,
+  wsConn,
+  showMessages,
+  setShowMessages,
+}) {
+  const localStr = !isStream ? localStream : remoteStream;
+  const remoteStr = isStream ? localStream : null;
+
   return (
-    <div className="relative flex flex-col items-center justify-center h-screen bg-[#837272]">
-      <Video stream={localStream} />
+    <div className="relative h-full bg-[#0c0b0b]">
+      <div className={`${showMessages ? "hidden sm:block" : null} h-full`}>
+        <Video stream={localStr} />
+        <Controls
+          {...{
+            setIsStream,
+            wsConn,
+            conn,
+            localStream,
+            showMessages,
+            setShowMessages,
+          }}
+        />
+      </div>
+
       {isStream ? (
-        <div className="border border-[#a97cce] shadow-md absolute w-1/3 aspect-square sm:aspect-video lg:w-1/4 md:top-8 top-4 lg:left-8 left-4 rounded-lg overflow-hidden">
-          <Video stream={remoteStream} />
+        <div className="border border-[#a97cce] shadow-md absolute w-32 md:w-1/4 aspect-square sm:aspect-video lg:w-1/4 md:top-12 top-4 lg:left-8 right-4 rounded-lg overflow-hidden z-50">
+          <Video stream={remoteStr} />
         </div>
       ) : null}
     </div>
   );
 }
+
+export default React.memo(VideoContainer);

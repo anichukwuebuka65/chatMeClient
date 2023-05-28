@@ -1,17 +1,16 @@
 import React, { useRef, useState } from "react";
-import { send } from "../components/Video/RTCPeerConn";
 
-function Login({ roomNotFound }) {
+function Login({ wsConn, roomId }) {
   const roomIdRef = useRef();
   const [err, setError] = useState("");
 
   function joinRoom() {
     if (!roomIdRef.current.value) return setError("Pls enter the room id ");
-    send({ type: "joinRoom", roomId: roomIdRef.current.value });
+    wsConn.sendJson({ type: "joinRoom", roomId: roomIdRef.current.value });
   }
 
   function createRoom() {
-    send({ type: "createRoom" });
+    wsConn.sendJson({ type: "createRoom" });
   }
 
   return (
@@ -23,7 +22,7 @@ function Login({ roomNotFound }) {
       <p className="text-[#ffffff] italic text-sm">
         chat with your buddies and family
       </p>
-      {roomNotFound && <p>Room not found, pls create a new room</p>}
+      {!roomId && <p>Room not found, pls create a new room</p>}
       <form className="grid gap-6">
         <label htmlFor="roomId"></label>
         <div className="grid w-full">
