@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 function Login({ wsConn, roomId }) {
   const roomIdRef = useRef();
@@ -14,11 +14,15 @@ function Login({ wsConn, roomId }) {
     wsConn.sendJson({ type: "createRoom" });
   }
 
+  const memoizedConn = useMemo(() => wsConn, [wsConn]);
+
   useEffect(() => {
-    wsConn.onopen = () => {
-      setConnOpen(true);
-    };
-  }, []);
+    if (wsConn) {
+      wsConn.onopen = () => {
+        setConnOpen(true);
+      };
+    }
+  }, [memoizedConn]);
 
   return (
     <div
