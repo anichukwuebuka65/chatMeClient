@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 
-const wsConn = new WebSocket("ws://localhost:3000");
+const localUrl = "ws://localhost:3000";
+const prodUrl = "wss://chatmebackend.onrender.com";
+
+const wsConn = new WebSocket(prodUrl);
 const subscribers = {};
 
 export default function useWebSocket() {

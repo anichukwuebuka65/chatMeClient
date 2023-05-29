@@ -3,12 +3,9 @@ import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import useWebSocket from "./hooks/useWebSocket";
 
-const localUrl = "ws://localhost:3000";
-const prodUrl = "https://chatmebackend.onrender.com";
-
 function App() {
   const [page, setPage] = useState("login");
-  const { wsConn, subscribe, subscribers } = useWebSocket(prodUrl);
+  const { wsConn, subscribe, subscribers } = useWebSocket();
   const [roomId, setRoomId] = useState(1);
   const [iceServers, setIceServers] = useState([]);
 

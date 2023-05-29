@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Video from "../Video/Video";
 
 export default function Chat({
   setShowMessages,
@@ -7,6 +8,7 @@ export default function Chat({
   messages,
   stream,
   dataChannel,
+  channelOpened,
 }) {
   const [message, setMessage] = useState("");
   const scrollToViewRef = useRef();
@@ -21,16 +23,26 @@ export default function Chat({
     if (scrollToViewRef.current) {
       scrollToViewRef.current.scrollIntoView({ alignToTop: false });
     }
-    if (dataChannel) dataChannel.send(message);
+    if (dataChannel) {
+      dataChannel.send(message);
+    }
+  }
+
+  if (!channelOpened) {
+    return (
+      <div className="flex items-center sm:basis-[16rem] grow-[1]">
+        <p className="grow text-center text-xl ">Connecting...</p>
+      </div>
+    );
   }
 
   return (
     <div className="relative sm:basis-[16rem] grow-[1]  bg-white h-full">
-      {/* {showMessages ? (
-        <div className="border border-[#a97cce] sm:hidden shadow-md absolute w-24 aspect-square sm:aspect-video lg:w-1/4 md:top-8 top-4 lg:left-8 left-4 rounded-lg overflow-hidden z-50">
+      {showMessages ? (
+        <div className=" sm:hidden shadow-md w-full h-20 z-50">
           <Video stream={stream} />
         </div>
-      ) : null} */}
+      ) : null}
 
       <div className="flex justify-end p-2">
         <button onClick={closeMessage}>

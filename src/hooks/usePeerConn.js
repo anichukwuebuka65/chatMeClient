@@ -5,24 +5,13 @@ export default function usePeerConn(
   iceServers,
   wsConn,
   setIsStream,
+  setChannelOpened,
   setMessages
 ) {
-  const [localStream] = useState(new MediaStream());
-  const [remoteStream] = useState(new MediaStream());
+  const [localStream, setLocalStream] = useState();
+  const [remoteStream, setRemoteStream] = useState(new MediaStream());
   const [conn, setConn] = useState();
   const [dataChannel, setDataChannel] = useState();
-  const [channelSubscribers, setChannelSubscribers] = useState([]);
-
-  function subscribeToData(fn) {
-    setChannelSubscribers((state) => [...state, fn]);
-  }
-
-  if (dataChannel) {
-    dataChannel.onmessage = (event) => {
-      console.log("message");
-      channelSubscribers.forEach((fn) => fn(event.data));
-    };
-  }
 
   useEffect(() => {
     let polite = true;
@@ -34,7 +23,6 @@ export default function usePeerConn(
     });
 
     const peerConn = new RTCPeerConnection({ iceServers });
-    setConn(peerConn);
 
     subscribe("userJoined", async () => {
       polite = false;
@@ -42,16 +30,6 @@ export default function usePeerConn(
     });
 
     addTrackToLocalStream();
-
-    // dataChannel.onmessage = (event) => {
-    //   setMessages((prev) => [
-    //     ...prev,
-    //     {
-    //       peer: "remote",
-    //       message: event.data,
-    //     },
-    //   ]);
-    // };
 
     peerConn.onnegotiationneeded = async () => {
       await peerConn.setLocalDescription();
@@ -67,14 +45,18 @@ export default function usePeerConn(
       }
       if (peerConn.connectionState == "connected") {
         if (!polite) {
-          setDataChannel(peerConn.createDataChannel("messages"));
+          const channel = peerConn.createDataChannel("messages");
+          registerChannelEvents(channel);
+          setDataChannel(channel);
         } else {
           peerConn.ondatachannel = (event) => {
+            registerChannelEvents(event.channel);
             setDataChannel(event.channel);
           };
         }
       }
     };
+
     peerConn.ontrack = ({ track }) => {
       remoteStream.addTrack(track);
       setIsStream(true);
@@ -84,16 +66,16 @@ export default function usePeerConn(
       wsConn.sendJson({ type: "candidate", candidate: event.candidate });
     };
 
+    setConn(peerConn);
+
     async function handleDescription(res) {
       if (res.description.type == "offer") {
         if (peerConn.signalingState !== "stable") {
           return;
         }
-
-        addTrackToPeerConn();
-
         try {
           await peerConn.setRemoteDescription(res.description);
+          await addTrackToPeerConn();
           await peerConn.setLocalDescription();
           wsConn.sendJson({
             type: "description",
@@ -107,6 +89,18 @@ export default function usePeerConn(
       }
     }
 
+    function registerChannelEvents(dataChannel) {
+      dataChannel.onmessage = (event) => {
+        setMessages((prev) => [
+          ...prev,
+          { peer: "remote", message: event.data },
+        ]);
+      };
+      dataChannel.onopen = () => {
+        setChannelOpened(true);
+      };
+    }
+
     function handleCandidate(res) {
       if (res.type === "candidate" && res.candidate) {
         peerConn.addIceCandidate(res.candidate);
@@ -114,25 +108,22 @@ export default function usePeerConn(
     }
 
     function addTrackToLocalStream() {
-      getMedia().then((stream) => {
-        stream.getTracks().forEach((track) => {
-          if (track.kind === "audio") return;
-          localStream.addTrack(track);
-        });
+      getMedia(false).then((stream) => {
+        setLocalStream(stream);
       });
     }
 
-    async function getMedia() {
+    async function getMedia(audio) {
       const constraints = {
         video: true,
-        audio: true,
+        audio,
       };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       return stream;
     }
 
     async function addTrackToPeerConn() {
-      const stream = await getMedia();
+      const stream = await getMedia(true);
       stream.getTracks().forEach((track) => {
         peerConn.addTrack(track);
       });
@@ -143,7 +134,6 @@ export default function usePeerConn(
     localStream,
     remoteStream,
     conn,
-    subscribeToData,
     dataChannel,
   };
 }

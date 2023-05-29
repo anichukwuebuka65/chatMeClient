@@ -4,18 +4,21 @@ import usePeerConn from "../hooks/usePeerConn";
 import Chat from "../components/Chat/Chat";
 
 export default function Home({ wsConn, iceServers, subscribe, roomId }) {
-  if (iceServers.length === 0) return null;
+  if (iceServers.length === 0) return <p> ice server error, try again</p>;
   const [isStream, setIsStream] = useState(false);
   const [messages, setMessages] = useState([]);
-  const { localStream, remoteStream, conn, subscribeToData, dataChannel } =
-    usePeerConn(subscribe, iceServers, wsConn, setIsStream, setMessages);
-  const [showMessages, setShowMessages] = useState(false);
+  const [channelOpened, setChannelOpened] = useState(false);
 
-  useEffect(() => {
-    subscribeToData((data) => {
-      setMessages((prev) => [...prev, { peer: "remote", message: data }]);
-    });
-  }, []);
+  const { localStream, remoteStream, conn, subscribeToData, dataChannel } =
+    usePeerConn(
+      subscribe,
+      iceServers,
+      wsConn,
+      setIsStream,
+      setChannelOpened,
+      setMessages
+    );
+  const [showMessages, setShowMessages] = useState(false);
 
   return (
     <div
@@ -53,6 +56,7 @@ export default function Home({ wsConn, iceServers, subscribe, roomId }) {
             setMessages,
             setShowMessages,
             dataChannel,
+            channelOpened,
             stream: isStream ? remoteStream : localStream,
           }}
         />

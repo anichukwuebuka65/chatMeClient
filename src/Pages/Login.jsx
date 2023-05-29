@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function Login({ wsConn, roomId }) {
   const roomIdRef = useRef();
   const [err, setError] = useState("");
+  const [connOpen, setConnOpen] = useState(false);
 
   function joinRoom() {
     if (!roomIdRef.current.value) return setError("Pls enter the room id ");
@@ -13,15 +14,23 @@ function Login({ wsConn, roomId }) {
     wsConn.sendJson({ type: "createRoom" });
   }
 
+  useEffect(() => {
+    wsConn.onopen = () => {
+      setConnOpen(true);
+    };
+  }, []);
+
   return (
     <div
       style={{ width: "min(100%, 28rem)" }}
       className=" rounded-md mx-4 p-4 bg-[#1f1c1c] text-center text-[#c0b0b0]"
     >
       <h1 className="text-4xl tracking-wider font-[600] mb-2">LitChat</h1>
-      <p className="text-[#ffffff] italic text-sm">
-        chat with your buddies and family
-      </p>
+      {!connOpen ? (
+        <p className="text-[#ffffff] italic text-sm">
+          Making webSocket connection...
+        </p>
+      ) : null}
       {!roomId && <p>Room not found, pls create a new room</p>}
       <form className="grid gap-6">
         <label htmlFor="roomId"></label>
@@ -38,14 +47,20 @@ function Login({ wsConn, roomId }) {
         </div>
 
         <button
-          className="bg-[#331c66] text-lg rounded-md py-2"
+          disabled={!connOpen}
+          className={`${
+            !connOpen && "cursor-not-allowed bg-[#48278f]"
+          } bg-[#331c66] text-lg rounded-md py-2`}
           type="button"
           onClick={joinRoom}
         >
           Join Room
         </button>
         <button
-          className="rounded py-2 bg-[#28742e] text-lg"
+          disabled={!connOpen}
+          className={`${
+            !connOpen && "cursor-not-allowed bg-[#38913e]"
+          } rounded py-2 bg-[#28742e] text-lg`}
           type="button"
           onClick={createRoom}
         >
