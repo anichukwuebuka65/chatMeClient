@@ -30,8 +30,15 @@ export default function Chat({
 
   if (!channelOpened) {
     return (
-      <div className="flex items-center sm:basis-[16rem] grow-[1]">
-        <p className="grow text-center text-xl ">Connecting...</p>
+      <div className="flex flex-col sm:basis-[16rem] grow-[1]">
+        <div className="flex  justify-end p-2">
+          <button onClick={closeMessage}>
+            <img className="w-8 " src="./assets/close.png" alt="close button" />
+          </button>
+        </div>
+        <div className="grow flex items-center ">
+          <p className="grow text-center text-xl ">Connecting...</p>
+        </div>
       </div>
     );
   }
