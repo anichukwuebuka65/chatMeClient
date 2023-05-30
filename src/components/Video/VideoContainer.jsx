@@ -19,7 +19,7 @@ function VideoContainer({
   return (
     <div className="relative h-full bg-[#0c0b0b]">
       <div className={`${showMessages ? "hidden sm:block" : null} h-full`}>
-        <Video stream={localStr} local />
+        <Video stream={localStr} local={isStream ? false : true} />
         <Controls
           {...{
             setIsStream,
@@ -35,7 +35,7 @@ function VideoContainer({
 
       {isStream ? (
         <div className="border border-[#a97cce] shadow-md absolute w-32 md:w-1/4 aspect-square sm:aspect-video lg:w-1/4 md:top-12 top-4 lg:left-8 right-4 rounded-lg overflow-hidden z-50">
-          <Video stream={remoteStr} />
+          <Video stream={remoteStr} local={isStream ? true : false} />
         </div>
       ) : null}
     </div>
