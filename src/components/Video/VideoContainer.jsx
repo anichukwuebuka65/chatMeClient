@@ -19,7 +19,7 @@ function VideoContainer({
   return (
     <div className="relative h-full bg-[#0c0b0b]">
       <div className={`${showMessages ? "hidden sm:block" : null} h-full`}>
-        <Video stream={localStr} />
+        <Video stream={localStr} local />
         <Controls
           {...{
             setIsStream,

@@ -116,23 +116,22 @@ export default function usePeerConn(
     }
 
     async function addTrackToLocalStream() {
-      const stream = await getMedia(false);
+      const stream = await getMedia();
       stream.getTracks().forEach((track) => {
         localStream.addTrack(track);
       });
     }
 
-    async function getMedia(audio) {
+    async function getMedia() {
       const constraints = {
         video: true,
-        audio,
+        audio: true,
       };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       return stream;
     }
 
     async function addTrackToPeerConn() {
-      // const stream = await getMedia(true);
       localStream.getTracks().forEach((track) => {
         peerConn.addTrack(track);
       });

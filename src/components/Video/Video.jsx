@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-export default function Video({ stream }) {
+export default function Video({ stream, local }) {
   const videoRef = useRef();
 
   useEffect(() => {
@@ -13,6 +13,7 @@ export default function Video({ stream }) {
         ref={videoRef}
         playsInline
         autoPlay
+        muted={local}
       ></video>
     </>
   );
