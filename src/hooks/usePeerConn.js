@@ -6,7 +6,9 @@ export default function usePeerConn(
   wsConn,
   setIsStream,
   setChannelOpened,
-  setMessages
+  setMessages,
+  setNoOfNewMessages,
+  showMessages
 ) {
   const [localStream, setLocalStream] = useState();
   const [remoteStream, setRemoteStream] = useState(new MediaStream());
@@ -91,6 +93,10 @@ export default function usePeerConn(
 
     function registerChannelEvents(dataChannel) {
       dataChannel.onmessage = (event) => {
+        console.log(showMessages);
+        if (!showMessages) {
+          setNoOfNewMessages((prev) => prev + 1);
+        }
         setMessages((prev) => [
           ...prev,
           { peer: "remote", message: event.data },
@@ -128,7 +134,7 @@ export default function usePeerConn(
         peerConn.addTrack(track);
       });
     }
-  }, []);
+  }, [showMessages]);
 
   return {
     localStream,

@@ -8,6 +8,7 @@ export default function Controls({
   setIsStream,
   showMessages,
   setShowMessages,
+  noOfNewMessages,
 }) {
   function toggleVideo() {
     const videoTrack = localStream.getVideoTracks()[0];
@@ -42,6 +43,7 @@ export default function Controls({
         src={"./assets/chat.png"}
         color={showMessages ? "bg-white" : "bg-blue-900"}
         btn="messages"
+        noOfNewMessages={noOfNewMessages}
       />
       <Button
         handler={endCall}

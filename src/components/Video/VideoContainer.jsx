@@ -11,6 +11,7 @@ function VideoContainer({
   wsConn,
   showMessages,
   setShowMessages,
+  noOfNewMessages,
 }) {
   const localStr = !isStream ? localStream : remoteStream;
   const remoteStr = isStream ? localStream : null;
@@ -27,6 +28,7 @@ function VideoContainer({
             localStream,
             showMessages,
             setShowMessages,
+            noOfNewMessages,
           }}
         />
       </div>

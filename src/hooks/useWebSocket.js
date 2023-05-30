@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const localUrl = "ws://localhost:3000";
 const prodUrl = "wss://chatmebackend.onrender.com";
+const subscribers = {};
 
 export default function useWebSocket() {
   const [wsConn, setWsConn] = useState();
-  const [subscribers, setSubscribers] = useState({});
 
   function subscribe(message, callback) {
-    setSubscribers((prev) => ({ ...prev, [message]: callback }));
+    subscribers[message] = callback;
   }
 
   useEffect(() => {
@@ -25,6 +25,6 @@ export default function useWebSocket() {
     };
 
     setWsConn(conn);
-  }, [subscribers]);
+  }, []);
   return { wsConn, subscribe, subscribers };
 }

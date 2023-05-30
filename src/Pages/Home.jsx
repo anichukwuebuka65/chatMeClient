@@ -8,17 +8,20 @@ export default function Home({ wsConn, iceServers, subscribe, roomId }) {
   const [isStream, setIsStream] = useState(false);
   const [messages, setMessages] = useState([]);
   const [channelOpened, setChannelOpened] = useState(false);
-
-  const { localStream, remoteStream, conn, subscribeToData, dataChannel } =
-    usePeerConn(
-      subscribe,
-      iceServers,
-      wsConn,
-      setIsStream,
-      setChannelOpened,
-      setMessages
-    );
+  const [noOfNewMessages, setNoOfNewMessages] = useState(0);
   const [showMessages, setShowMessages] = useState(false);
+
+  const { localStream, remoteStream, conn, dataChannel } = usePeerConn(
+    subscribe,
+    iceServers,
+    wsConn,
+    setIsStream,
+    setChannelOpened,
+    setMessages,
+    setNoOfNewMessages,
+    showMessages
+  );
+  console.log(showMessages);
 
   return (
     <div
@@ -44,6 +47,7 @@ export default function Home({ wsConn, iceServers, subscribe, roomId }) {
             setIsStream,
             showMessages,
             setShowMessages,
+            noOfNewMessages,
           }}
           isStream={isStream}
         />
