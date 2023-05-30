@@ -21,7 +21,6 @@ export default function Home({ wsConn, iceServers, subscribe, roomId }) {
     setNoOfNewMessages,
     showMessages
   );
-  console.log(showMessages);
 
   return (
     <div

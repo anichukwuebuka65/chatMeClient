@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+const localStream = new MediaStream();
+
 export default function usePeerConn(
   subscribe,
   iceServers,
@@ -10,7 +12,7 @@ export default function usePeerConn(
   setNoOfNewMessages,
   showMessages
 ) {
-  const [localStream, setLocalStream] = useState();
+  // const [localStream, setLocalStream] = useState();
   const [remoteStream, setRemoteStream] = useState(new MediaStream());
   const [conn, setConn] = useState();
   const [dataChannel, setDataChannel] = useState();
@@ -113,9 +115,10 @@ export default function usePeerConn(
       }
     }
 
-    function addTrackToLocalStream() {
-      getMedia(false).then((stream) => {
-        setLocalStream(stream);
+    async function addTrackToLocalStream() {
+      const stream = await getMedia(false);
+      stream.getTracks().forEach((track) => {
+        localStream.addTrack(track);
       });
     }
 
@@ -129,8 +132,8 @@ export default function usePeerConn(
     }
 
     async function addTrackToPeerConn() {
-      const stream = await getMedia(true);
-      stream.getTracks().forEach((track) => {
+      // const stream = await getMedia(true);
+      localStream.getTracks().forEach((track) => {
         peerConn.addTrack(track);
       });
     }
