@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import Main from "./Pages/Main";
 import Home from "./Pages/Home";
-import Login from "./Pages/Login";
 import useWebSocket from "./hooks/useWebSocket";
 
 function App() {
@@ -13,9 +13,9 @@ function App() {
 
   function getPage(page) {
     const pageComponents = {
-      login: <Login {...{ setPage, wsConn, roomId }} />,
+      login: <Home {...{ setPage, wsConn, roomId }} />,
       home: (
-        <Home {...{ wsConn, iceServers, subscribers, subscribe, roomId }} />
+        <Main {...{ wsConn, iceServers, subscribers, subscribe, roomId }} />
       ),
     };
 
@@ -45,7 +45,7 @@ function App() {
   }, []);
 
   return (
-    <div className=" h-screen flex items-center justify-center">
+    <div className=" min-h-screen flex items-center justify-center">
       {getPage(page)}
     </div>
   );
