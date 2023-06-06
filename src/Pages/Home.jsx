@@ -27,11 +27,11 @@ function Home({ wsConn, roomId }) {
   return (
     <div className="min-h-screen bg-black w-full">
       <div className="flex justify-between p-6 bg-[#0e0d0d]">
-        <p className="text-[#beafaf] text-5xl font-bold">LitChat</p>
+        <p className="text-[#beafaf] text-3xl md:text-5xl font-bold">LitChat</p>
         <div>
           <button
             onClick={createRoom}
-            className="bg-[#1d266e] text-[#e0d8d8] text-3xl py-3 px-5 rounded-md"
+            className="bg-[#1d266e] text-[#e0d8d8] text-md md:text-3xl py-3 px-5 rounded-md"
           >
             Create Room
           </button>
@@ -41,17 +41,23 @@ function Home({ wsConn, roomId }) {
         style={{ minHeight: "calc(100vh - 110px)" }}
         className="flex flex-col md:flex-row text-[#beafaf] py-16 px-10"
       >
-        <div className="grow basis3/5 flex items-center justify-center text-[28px] leading-7 bg-[#080808] p-4 rounded-sm font-semibold">
+        <div className="grow basis3/5 flex items-center justify-center text-md md:text-[28px] leading-7 bg-[#080808] p-4 rounded-sm font-semibold">
           <div>
-            <p className="mb-6">- Connect with peers in real time on video.</p>
-            <p className="mb-6">- Send messages to each other in real time.</p>
-            <p className="mb-6">- Share pictures and files with each other.</p>
-            <p className="mb-6">
+            <p className="mb-3 md:mb-6">
+              - Connect with peers in real time on video.
+            </p>
+            <p className="mb-3 md:mb-6">
+              - Send messages to each other in real time.
+            </p>
+            <p className="mb-3 md:mb-6">
+              - Share pictures and files with each other.
+            </p>
+            <p className="mb-3 md:mb-6">
               - Be sure of privacy as connection is directly between peers.{" "}
             </p>
           </div>
         </div>
-        <div className="grow basis-2/5 bg-[#080808] gap-6 p-6 pt-12">
+        <div className="md:grow md:basis-2/5 bg-[#080808] gap-6 md:p-6 md:pt-12">
           <div className="grid gap-6 w-full p-6 bg-[#020202] rounded-sm">
             {!connOpen ? (
               <p className="text-[#ffffff] italic text-sm">
@@ -59,7 +65,7 @@ function Home({ wsConn, roomId }) {
               </p>
             ) : null}
             {!roomId && <p>Room not found, pls create a new room</p>}
-            <div className="grid gap-6">
+            <div className="grid w-full gap-6">
               <input
                 className={` ${
                   err ? "border-2 border-red-900" : ""
@@ -81,7 +87,7 @@ function Home({ wsConn, roomId }) {
                 join room
               </button>
             </div>
-            <div className="grid">
+            <div className="grid w-full">
               <button
                 disabled={!connOpen}
                 className={`${
